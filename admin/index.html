@@ -1,100 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByteBulletin CMS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ByteBulletin CMS</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f7fa;
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #f5f7fa;
+    }
+    .cms-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 16px;
+      color: #4a5568;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #e63946;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 
-        .cms-loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            gap: 16px;
-            color: #4a5568;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #e63946;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-
-    <!-- Netlify Identity -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <!-- Identity -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
 <body>
 
 <div id="cms-placeholder" class="cms-loading">
-    <div class="spinner"></div>
-    <div>Loading CMS...</div>
+  <div class="spinner"></div>
+  <div>Loading CMS...</div>
 </div>
 
 <script>
-/* ==========================================
-   FIX 1: HANDLE PASSWORD RECOVERY REDIRECT
-========================================== */
+/* ✅ FIX 1: Proper recovery redirect */
 if (window.location.hash.includes("recovery_token")) {
-    window.location.href = "/admin/" + window.location.hash;
+  window.location.href = "/admin/" + window.location.hash;
 }
 
-/* ==========================================
-   FIX 2: LOAD NETLIFY CMS
-========================================== */
+/* ✅ FIX 2: Load CMS */
 (function () {
-    const script = document.createElement('script');
-    script.src = "https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js";
-    script.async = true;
+  const script = document.createElement("script");
+  script.src = "https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js";
+  script.async = true;
 
-    script.onload = () => {
-        const placeholder = document.getElementById('cms-placeholder');
-        if (placeholder) placeholder.style.display = 'none';
-    };
+  script.onload = () => {
+    const el = document.getElementById("cms-placeholder");
+    if (el) el.style.display = "none";
+  };
 
-    document.head.appendChild(script);
+  document.head.appendChild(script);
 })();
 
-/* ==========================================
-   FIX 3: HANDLE LOGIN / REDIRECT
-========================================== */
+/* ✅ FIX 3: CLEAN Identity handling (NO conflicts) */
 if (window.netlifyIdentity) {
 
-    window.netlifyIdentity.on("init", user => {
-        if (!user) {
-            window.netlifyIdentity.on("login", () => {
-                document.location.reload();
-            });
-        }
-    });
+  window.netlifyIdentity.on("init", user => {
+    // Do nothing here (important)
+  });
 
-    // Optional: auto redirect after login
-    window.netlifyIdentity.on("login", () => {
-        window.location.href = "/admin/";
-    });
+  window.netlifyIdentity.on("login", () => {
+    window.netlifyIdentity.close();   // close popup properly
+    document.location.reload();       // reload CMS AFTER login
+  });
+
 }
 
-/* ==========================================
-   FIX 4: PREVENT WRONG HASH REDIRECT
-========================================== */
+/* ✅ FIX 4: Clean URL (but keep recovery token) */
 if (window.location.hash && !window.location.hash.includes("recovery_token")) {
-    history.replaceState(null, null, window.location.pathname);
+  history.replaceState(null, null, window.location.pathname);
 }
 </script>
 
