@@ -1,16 +1,19 @@
 {
   "name": "bytebulletin",
   "version": "1.0.0",
-  "description": "ByteBulletin News Website with Auto-Generated Index",
+  "description": "ByteBulletin News Website with Markdown to JSON Converter",
   "main": "build-index.js",
   "scripts": {
     "build": "node build-index.js",
-    "test": "node build-index.js && echo 'Index generation test passed'"
+    "test": "node build-index.js && echo 'Build test passed'"
   },
-  "keywords": ["news", "static-site", "netlify"],
+  "keywords": ["news", "static-site", "netlify", "cms"],
   "author": "ByteBulletin",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3"
   }
 }
