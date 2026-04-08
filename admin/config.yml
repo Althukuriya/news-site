@@ -52,26 +52,21 @@ collections:
         widget: "string"
         default: "{{slug}}"
         required: true
-        hint: "Unique identifier - auto-generated from slug"
 
       - label: "Title"
         name: "title"
         widget: "string"
         required: true
-        hint: "Main headline of the article"
 
       - label: "Slug"
         name: "slug"
         widget: "string"
         required: true
-        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Must be URL-friendly (lowercase, hyphens only)']
-        hint: "URL path (auto-generated from title, but editable)"
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Use lowercase and hyphens only']
 
       - label: "Publish Date"
         name: "date"
         widget: "datetime"
-        date_format: "YYYY-MM-DD"
-        time_format: "HH:mm"
         format: "YYYY-MM-DDTHH:mm:ssZ"
         required: true
 
@@ -79,16 +74,11 @@ collections:
         name: "author"
         widget: "string"
         default: "ByteBulletin Staff"
-        required: true
 
       - label: "Featured Image"
         name: "image"
         widget: "image"
         required: true
-        hint: "Main image for the article (required)"
-        media_library:
-          config:
-            max_file_size: 5242880
 
       - label: "Category"
         name: "category"
@@ -102,15 +92,10 @@ collections:
           - { label: "World", value: "World" }
           - { label: "India", value: "India" }
         default: "News"
-        required: true
 
-      # ✅ FIXED TAGS FIELD (THIS WAS THE ERROR)
       - label: "Tags"
         name: "tags"
         widget: "list"
-        allow_add: true
-        default: ["News"]
-        hint: "Add relevant tags for better discovery"
         field:
           label: "Tag"
           name: "tag"
@@ -120,18 +105,15 @@ collections:
         name: "featured"
         widget: "boolean"
         default: false
-        hint: "Mark as featured to show in hero section"
 
       - label: "Summary"
         name: "summary"
         widget: "text"
         required: true
-        pattern: ['^.{20,160}$', 'Must be between 20 and 160 characters']
 
       - label: "Content"
         name: "content"
         widget: "markdown"
-        required: true
         modes: ["rich_text", "raw"]
         buttons:
           - bold
@@ -143,31 +125,25 @@ collections:
           - code
           - bulleted-list
           - numbered-list
-          - image
 
       - label: "SEO Settings"
         name: "seo"
         widget: "object"
         collapsed: true
-        summary: "SEO: {{fields.seoTitle}}"
         fields:
           - label: "SEO Title"
             name: "seoTitle"
             widget: "string"
             required: false
-            pattern: ['^.{0,60}$', 'Max 60 characters']
 
           - label: "SEO Description"
             name: "seoDescription"
             widget: "text"
             required: false
-            pattern: ['^.{0,160}$', 'Max 160 characters']
 
-      - label: "Reading Time (minutes)"
+      - label: "Reading Time"
         name: "readingTime"
         widget: "number"
-        required: false
-        default: 3
         value_type: "int"
         min: 1
         max: 30
