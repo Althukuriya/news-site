@@ -1,0 +1,21 @@
+{
+    "name": "ByteBulletin",
+    "short_name": "ByteBulletin",
+    "description": "Latest breaking news and headlines from India and the world",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "theme_color": "#0a2540",
+    "background_color": "#ffffff",
+    "icons": [
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

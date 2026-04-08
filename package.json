@@ -1,0 +1,16 @@
+{
+  "name": "bytebulletin",
+  "version": "1.0.0",
+  "description": "ByteBulletin News Website with Auto-Generated Index",
+  "main": "build-index.js",
+  "scripts": {
+    "build": "node build-index.js",
+    "test": "node build-index.js && echo 'Index generation test passed'"
+  },
+  "keywords": ["news", "static-site", "netlify"],
+  "author": "ByteBulletin",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

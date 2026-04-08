@@ -1,0 +1,38 @@
+# robots.txt for ByteBulletin
+# Blocks JSON data files from being indexed while allowing main pages
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /bookmarks.html
+Allow: /category.html
+Allow: /search.html
+Allow: /post.html
+
+# Block JSON data files completely
+Disallow: /data/
+Disallow: /*.json$
+
+# Block admin/CMS files
+Disallow: /admin/
+Disallow: /admin/*
+
+# Block image uploads directory from being indexed
+Disallow: /images/uploads/
+
+# Block potential duplicate paths
+Disallow: /*?*
+Disallow: /post.html?*
+
+# Sitemap location
+Sitemap: https://bookmyads.in/sitemap.xml
+
+# Crawl delay (optional - be respectful)
+Crawl-delay: 1
+
+# Host directive (helps with duplicate domain issues)
+Host: https://bookmyads.in

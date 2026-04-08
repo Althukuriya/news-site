@@ -1,0 +1,149 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "posts"
+    label: "Articles"
+    label_singular: "Article"
+    folder: "data/posts"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: "id"
+
+    editor:
+      preview: true
+
+    summary: "{{fields.title}} ({{fields.category}})"
+    sortable_fields: ["date", "title"]
+
+    view_filters:
+      - label: "Featured"
+        field: "featured"
+        pattern: true
+      - label: "Category: News"
+        field: "category"
+        pattern: "News"
+      - label: "Category: Technology"
+        field: "category"
+        pattern: "Technology"
+      - label: "Category: Sports"
+        field: "category"
+        pattern: "Sports"
+      - label: "Category: Business"
+        field: "category"
+        pattern: "Business"
+      - label: "Category: Finance"
+        field: "category"
+        pattern: "Finance"
+      - label: "Category: World"
+        field: "category"
+        pattern: "World"
+      - label: "Category: India"
+        field: "category"
+        pattern: "India"
+
+    fields:
+      - label: "Post ID (Auto)"
+        name: "id"
+        widget: "string"
+        default: "{{slug}}"
+        required: true
+
+      - label: "Title"
+        name: "title"
+        widget: "string"
+        required: true
+
+      - label: "Slug"
+        name: "slug"
+        widget: "string"
+        required: true
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Use lowercase and hyphens only']
+
+      - label: "Publish Date"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DDTHH:mm:ssZ"
+        required: true
+
+      - label: "Author"
+        name: "author"
+        widget: "string"
+        default: "ByteBulletin Staff"
+
+      - label: "Featured Image"
+        name: "image"
+        widget: "image"
+        required: true
+
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "News", value: "News" }
+          - { label: "Sports", value: "Sports" }
+          - { label: "Technology", value: "Technology" }
+          - { label: "Business", value: "Business" }
+          - { label: "Finance", value: "Finance" }
+          - { label: "World", value: "World" }
+          - { label: "India", value: "India" }
+        default: "News"
+
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        field:
+          label: "Tag"
+          name: "tag"
+          widget: "string"
+
+      - label: "Featured Article"
+        name: "featured"
+        widget: "boolean"
+        default: false
+
+      - label: "Summary"
+        name: "summary"
+        widget: "text"
+        required: true
+
+      - label: "Content"
+        name: "content"
+        widget: "markdown"
+        modes: ["rich_text", "raw"]
+        buttons:
+          - bold
+          - italic
+          - link
+          - heading-one
+          - heading-two
+          - quote
+          - code
+          - bulleted-list
+          - numbered-list
+
+      - label: "SEO Settings"
+        name: "seo"
+        widget: "object"
+        collapsed: true
+        fields:
+          - label: "SEO Title"
+            name: "seoTitle"
+            widget: "string"
+            required: false
+
+          - label: "SEO Description"
+            name: "seoDescription"
+            widget: "text"
+            required: false
+
+      - label: "Reading Time"
+        name: "readingTime"
+        widget: "number"
+        value_type: "int"
+        min: 1
+        max: 30
