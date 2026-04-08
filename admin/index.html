@@ -49,7 +49,7 @@
 
 <script>
 /* ==========================================
-   FIX 1: HANDLE ALL NETLIFY TOKENS
+   TOKEN REDIRECT FIX (signup/reset/invite)
 ========================================== */
 const hash = window.location.hash;
 
@@ -58,11 +58,13 @@ if (
   hash.includes("recovery_token") ||
   hash.includes("invite_token")
 ) {
-  window.location.href = "/admin/" + hash;
+  if (!window.location.pathname.startsWith("/admin")) {
+    window.location.href = "/admin/" + hash;
+  }
 }
 
 /* ==========================================
-   FIX 2: LOAD NETLIFY CMS
+   LOAD NETLIFY CMS
 ========================================== */
 (function () {
   const script = document.createElement("script");
@@ -78,29 +80,22 @@ if (
 })();
 
 /* ==========================================
-   FIX 3: CLEAN LOGIN HANDLING
+   CLEAN LOGIN HANDLING (NO RELOAD BUG)
 ========================================== */
 if (window.netlifyIdentity) {
-
-  window.netlifyIdentity.on("init", user => {
-    // No action needed here
-  });
-
   window.netlifyIdentity.on("login", () => {
-    window.netlifyIdentity.close();   // close popup
-    document.location.reload();       // reload CMS
+    window.netlifyIdentity.close(); // just close popup
   });
-
 }
 
 /* ==========================================
-   FIX 4: CLEAN URL (KEEP TOKENS SAFE)
+   CLEAN URL (avoid unwanted # issues)
 ========================================== */
 if (
   window.location.hash &&
-  !window.location.hash.includes("confirmation_token") &&
-  !window.location.hash.includes("recovery_token") &&
-  !window.location.hash.includes("invite_token")
+  !hash.includes("confirmation_token") &&
+  !hash.includes("recovery_token") &&
+  !hash.includes("invite_token")
 ) {
   history.replaceState(null, null, window.location.pathname);
 }
