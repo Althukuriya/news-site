@@ -1,0 +1,223 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "posts"
+    label: "Articles"
+    label_singular: "Article"
+    folder: "data/posts"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: "id"
+    editor:
+      preview: true
+    summary: "{{fields.title}} ({{fields.category}})"
+    sortable_fields: ["date", "title"]
+    view_filters:
+      - label: "Featured"
+        field: "featured"
+        pattern: true
+      - label: "Category: News"
+        field: "category"
+        pattern: "News"
+      - label: "Category: Technology"
+        field: "category"
+        pattern: "Technology"
+      - label: "Category: Sports"
+        field: "category"
+        pattern: "Sports"
+      - label: "Category: Business"
+        field: "category"
+        pattern: "Business"
+      - label: "Category: Finance"
+        field: "category"
+        pattern: "Finance"
+      - label: "Category: World"
+        field: "category"
+        pattern: "World"
+      - label: "Category: India"
+        field: "category"
+        pattern: "India"
+    fields:
+      # Basic Info
+      - label: "Post ID (Auto)"
+        name: "id"
+        widget: "string"
+        default: "{{slug}}"
+        required: true
+        hint: "Unique identifier - auto-generated from slug"
+      
+      - label: "Title"
+        name: "title"
+        widget: "string"
+        required: true
+        hint: "Main headline of the article"
+      
+      - label: "Slug"
+        name: "slug"
+        widget: "string"
+        required: true
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Must be URL-friendly (lowercase, hyphens only)']
+        hint: "URL path (auto-generated from title, but editable)"
+      
+      # Publishing
+      - label: "Publish Date"
+        name: "date"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: "HH:mm"
+        format: "YYYY-MM-DDTHH:mm:ssZ"
+        default: ""
+        required: true
+      
+      - label: "Author"
+        name: "author"
+        widget: "string"
+        default: "ByteBulletin Staff"
+        required: true
+      
+      # Media
+      - label: "Featured Image"
+        name: "image"
+        widget: "image"
+        required: true
+        hint: "Main image for the article (required)"
+        media_library:
+          config:
+            max_file_size: 5242880  # 5MB
+      
+      # Classification
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - label: "News"
+            value: "News"
+          - label: "Sports"
+            value: "Sports"
+          - label: "Technology"
+            value: "Technology"
+          - label: "Business"
+            value: "Business"
+          - label: "Finance"
+            value: "Finance"
+          - label: "World"
+            value: "World"
+          - label: "India"
+            value: "India"
+        required: true
+        default: "News"
+      
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        allow_add: true
+        default: ["News"]
+        hint: "Add relevant tags for better discovery"
+        field:
+          label: "Tag"
+          name: "tag"
+          widget: "string"
+      
+      - label: "Featured Article"
+        name: "featured"
+        widget: "boolean"
+        default: false
+        hint: "Mark as featured to show in hero section and with badge"
+      
+      # Content
+      - label: "Summary"
+        name: "summary"
+        widget: "text"
+        required: true
+        pattern: ['^.{20,160}$', 'Must be between 20 and 160 characters']
+        hint: "Short description shown in article cards (20-160 chars)"
+      
+      - label: "Content"
+        name: "content"
+        widget: "markdown"
+        required: true
+        hint: "Main article content with rich formatting"
+        modes: ["rich_text", "raw"]
+        buttons:
+          - "bold"
+          - "italic"
+          - "link"
+          - "heading-one"
+          - "heading-two"
+          - "quote"
+          - "code"
+          - "bulleted-list"
+          - "numbered-list"
+          - "image"
+      
+      # SEO Group (NEW)
+      - label: "SEO Settings"
+        name: "seo"
+        widget: "object"
+        collapsed: true
+        summary: "SEO: {{fields.seoTitle}}"
+        fields:
+          - label: "SEO Title"
+            name: "seoTitle"
+            widget: "string"
+            required: false
+            hint: "Leave empty to use article title (max 60 chars)"
+            pattern: ['^.{0,60}$', 'Title should be under 60 characters']
+          
+          - label: "SEO Description"
+            name: "seoDescription"
+            widget: "text"
+            required: false
+            hint: "Leave empty to use article summary (max 160 chars)"
+            pattern: ['^.{0,160}$', 'Description should be under 160 characters']
+      
+      # Reading Time
+      - label: "Reading Time (minutes)"
+        name: "readingTime"
+        widget: "number"
+        required: false
+        default: 3
+        hint: "Auto-calculated, but editable"
+        value_type: "int"
+        min: 1
+        max: 30
+
+  - name: "settings"
+    label: "Site Settings"
+    label_singular: "Setting"
+    delete: false
+    editor:
+      preview: false
+    files:
+      - name: "general"
+        label: "General Settings"
+        file: "data/settings.json"
+        fields:
+          - label: "Site Title"
+            name: "siteTitle"
+            widget: "string"
+            default: "ByteBulletin"
+          - label: "Site Description"
+            name: "siteDescription"
+            widget: "text"
+            default: "Latest breaking news and headlines"
+          - label: "Footer Copyright"
+            name: "copyright"
+            widget: "string"
+            default: "ByteBulletin. All rights reserved."
+          - label: "Social Links"
+            name: "social"
+            widget: "list"
+            fields:
+              - label: "Platform"
+                name: "platform"
+                widget: "select"
+                options: ["facebook", "twitter", "instagram", "youtube"]
+              - label: "URL"
+                name: "url"
+                widget: "string"

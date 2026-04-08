@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - ByteBulletin</title>
+    <meta name="description" content="ByteBulletin's privacy policy outlines how we collect, use, and protect your data when you visit our news website.">
+    <link rel="canonical" href="https://bytebulletin.net/privacy.html">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo-area">
+                    <a href="index.html" class="logo">Byte<span>Bulletin</span></a>
+                    <span class="breaking-tag">LIVE</span>
+                </div>
+                <div class="header-actions">
+                    <button class="dark-mode-toggle" id="darkModeToggle"><i class="fas fa-moon"></i></button>
+                    <button class="search-toggle" id="searchToggleBtn"><i class="fas fa-search"></i></button>
+                    <button class="bookmark-nav" id="bookmarkNavBtn"><i class="fas fa-bookmark"></i><span id="bookmarkCount">0</span></button>
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle"><i class="fas fa-bars"></i></button>
+                </div>
+            </div>
+            <div class="search-bar-container" id="searchBarContainer">
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search news...">
+                    <button id="searchSubmitBtn"><i class="fas fa-search"></i></button>
+                    <div id="liveSearchResults"></div>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul id="categoryNav">
+                    <li><a href="index.html">Home</a></li>
+                </ul>
+                <div class="category-dropdown">
+                    <button class="dropdown-btn">Categories <i class="fas fa-chevron-down"></i></button>
+                    <div class="dropdown-content" id="dropdownContent"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div id="readingProgressBar"></div>
+    <main class="main-content">
+        <div class="container">
+            <div style="max-width: 900px; margin: 48px auto; background: white; border-radius: 24px; padding: 48px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+                <h1 style="font-size: 42px; margin-bottom: 20px;">Privacy Policy</h1>
+                <div style="height:4px;width:80px;background:#e63946;margin-bottom:32px;"></div>
+                <p><strong>Last updated:</strong> April 2025</p>
+                
+                <p style="margin: 24px 0;">ByteBulletin ("we," "our," or "us") is committed to protecting your privacy. This policy explains how we handle information when you visit our news website.</p>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">Information We Collect</h2>
+                <p>We collect minimal data on this static website:</p>
+                <ul style="margin-left: 24px; line-height: 1.8;">
+                    <li><strong>Local Storage:</strong> Your bookmarks and dark mode preference are stored locally on your device using browser localStorage.</li>
+                    <li><strong>Anonymous Analytics:</strong> We may use basic page view counting for statistical purposes.</li>
+                    <li><strong>No Tracking Cookies:</strong> We do not use cookies for tracking or advertising purposes.</li>
+                </ul>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">How We Use Your Data</h2>
+                <p>Since ByteBulletin is a static website powered by a JSON-based content management system:</p>
+                <ul style="margin-left: 24px; line-height: 1.8;">
+                    <li>We do not collect personal information like names, emails, or IP addresses</li>
+                    <li>We do not share any data with third parties</li>
+                    <li>All content is served directly from static files</li>
+                </ul>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">Local Storage & Bookmarks</h2>
+                <p>Your saved articles and reading preferences are stored exclusively in your browser's local storage. This data never leaves your device. You can clear your bookmarks at any time by:</p>
+                <ul style="margin-left: 24px; line-height: 1.8;">
+                    <li>Using the browser's developer tools to clear local storage</li>
+                    <li>Clearing your browser cache and site data</li>
+                </ul>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">Third-Party Services</h2>
+                <p>Our website uses the following third-party services:</p>
+                <ul style="margin-left: 24px; line-height: 1.8;">
+                    <li><strong>Google Fonts:</strong> For typography. May collect IP addresses.</li>
+                    <li><strong>FontAwesome:</strong> For icons. May collect usage data.</li>
+                    <li><strong>OneSignal (optional):</strong> For push notifications if you opt-in. You can unsubscribe anytime.</li>
+                </ul>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">Children's Privacy</h2>
+                <p>Our website is not directed at children under 13. We do not knowingly collect information from children.</p>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">Your Rights</h2>
+                <p>You have the right to:</p>
+                <ul style="margin-left: 24px; line-height: 1.8;">
+                    <li>Clear your bookmarks at any time via browser settings</li>
+                    <li>Disable push notifications in your browser preferences</li>
+                    <li>Use the website with JavaScript disabled (limited functionality)</li>
+                </ul>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">Changes to This Policy</h2>
+                <p>We may update this privacy policy occasionally. Any changes will be posted on this page.</p>
+                
+                <h2 style="font-size: 28px; margin: 32px 0 16px 0;">Contact Us</h2>
+                <p>If you have questions about this privacy policy:</p>
+                <p><i class="fas fa-envelope" style="color: #e63946;"></i> <a href="mailto:bookmyads122@gmail.com" style="color: #e63946;">bookmyads122@gmail.com</a></p>
+                <p><i class="fas fa-phone" style="color: #e63946;"></i> +91 8088396708</p>
+                <p><i class="fas fa-map-marker-alt" style="color: #e63946;"></i> Bangalore, India</p>
+                
+                <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #eef2f5;">
+                    <a href="index.html" style="color: #e63946; text-decoration: none;">← Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h3>ByteBulletin</h3>
+                    <p>Fast, reliable news from India and the world.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="privacy.html">Privacy</a></li>
+                        <li><a href="terms.html">Terms</a></li>
+                        <li><a href="bookmarks.html">Bookmarks</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> bookmyads122@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +91 8088396708</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Bangalore, India</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ByteBulletin. All rights reserved. Powered by Netlify CMS.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
