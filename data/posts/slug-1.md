@@ -9,7 +9,7 @@ category: World
 tags:
   - Iran War, Ceasefire, Donald Trump, Strait of Hormuz, Middle East Conflict
   - Strait of Hormuz
-featured: true
+featured: false
 summary: The United States and Iran have reached a tentative two-week ceasefire
   agreement following intense military escalation, just hours before a
   self-imposed deadline set by President Donald Trump. The deal aims to
