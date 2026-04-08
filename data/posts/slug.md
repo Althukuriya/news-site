@@ -1,5 +1,5 @@
 ---
-id: "{{slug}}"
+id: "us-iran-agree-two-week-ceasefire-2026"
 title: US, Iran Agree to Two-Week Ceasefire After Five Weeks of Conflict
 slug: us-iran-agree-two-week-ceasefire-2026
 date: 2026-04-08T20:50:31+05:30
