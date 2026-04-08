@@ -1,47 +1,31 @@
 # ==========================================
-# NETLIFY CONFIGURATION FOR BYTEBULLETIN
-# Option B: Build Script Method
+# NETLIFY CONFIGURATION (FIXED)
 # ==========================================
 
 [build]
-  # This runs build-index.js before every deploy
   command = "node build-index.js"
-  
-  # Directory to publish (root folder)
   publish = "."
 
-# Build environment settings
 [build.environment]
   NODE_VERSION = "20"
 
-# Redirects for clean URLs and SEO
+# Clean URL redirect
 [[redirects]]
   from = "/index.html"
   to = "/"
   status = 301
   force = true
 
-# Prevent access to data folder (SEO - blocks JSON files)
-[[redirects]]
-  from = "/data/*"
-  to = "/404.html"
-  status = 404
-  force = true
-
-# Block direct access to JSON files
-[[redirects]]
-  from = "/*.json"
-  to = "/404.html"
-  status = 404
-  force = true
-
-# Standard 404 page
+# SPA fallback (optional but safe)
 [[redirects]]
   from = "/*"
-  to = "/404.html"
-  status = 404
+  to = "/index.html"
+  status = 200
 
-# Headers for security and SEO
+# ==========================================
+# SECURITY HEADERS (SAFE)
+# ==========================================
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -50,7 +34,10 @@
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Tell search engines NOT to index JSON files
+# ==========================================
+# SEO: DO NOT INDEX JSON (BUT ALLOW ACCESS)
+# ==========================================
+
 [[headers]]
   for = "/data/*"
   [headers.values]
@@ -61,7 +48,10 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
-# Cache static assets
+# ==========================================
+# CACHING
+# ==========================================
+
 [[headers]]
   for = "/images/*"
   [headers.values]
@@ -77,19 +67,20 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# HTML files - shorter cache
 [[headers]]
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=3600"
 
-# Sitemap headers
+# ==========================================
+# FILE TYPES
+# ==========================================
+
 [[headers]]
   for = "/sitemap.xml"
   [headers.values]
     Content-Type = "application/xml"
 
-# Robots.txt headers
 [[headers]]
   for = "/robots.txt"
   [headers.values]
