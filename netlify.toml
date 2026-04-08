@@ -1,9 +1,8 @@
 # ==========================================
 # NETLIFY CONFIGURATION (FIXED)
 # ==========================================
-
 [build]
-  command = "node build-index.js"
+  command = "npm install && node build-index.js"
   publish = "."
 
 [build.environment]
