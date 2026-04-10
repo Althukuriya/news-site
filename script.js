@@ -1,6 +1,6 @@
 // ==========================================
 // BYTEBULLETIN - STATIC CMS VERSION (PRODUCTION)
-// No admin leaks, proper error handling, SEO optimized
+// Frontend UI/UX Upgrade - BBC Style
 // ==========================================
 
 // ------------------------------
@@ -77,6 +77,53 @@ function generateSlug(text) {
         .replace(/\s+/g, '-')
         .replace(/--+/g, '-')
         .trim();
+}
+
+function truncateSummary(text, maxLength = 120) {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+}
+
+function convertMarkdownToHtml(content) {
+    if (!content) return '<p>No content available.</p>';
+    
+    let html = content;
+    
+    // Convert markdown-style headings
+    html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+    
+    // Convert bold
+    html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+    
+    // Convert italic
+    html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+    
+    // Convert links
+    html = html.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
+    
+    // Convert unordered lists
+    html = html.replace(/^\s*[\-\*]\s+(.*)$/gim, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    
+    // Convert numbered lists
+    html = html.replace(/^\s*\d+\.\s+(.*)$/gim, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+    
+    // Convert line breaks to paragraphs
+    if (!html.includes('<p>') && !html.includes('<div>') && !html.includes('<h')) {
+        const paragraphs = html.split('\n\n');
+        html = paragraphs.map(para => {
+            if (para.trim()) {
+                return `<p>${para.trim().replace(/\n/g, '<br>')}</p>`;
+            }
+            return '';
+        }).join('');
+    }
+    
+    return html || '<p>No content available.</p>';
 }
 
 function showLoader(container = dom.dynamicContent) {
@@ -227,6 +274,13 @@ async function fetchAllPosts(forceRefresh = false) {
         const posts = results
             .filter(post => post && post.id && post.title)
             .map(post => {
+                // Convert content from markdown to HTML if needed
+                let contentHtml = post.content || '<p>No content available.</p>';
+                // If content looks like plain text or markdown (no HTML tags), convert it
+                if (contentHtml && !contentHtml.includes('<') && !contentHtml.includes('>')) {
+                    contentHtml = convertMarkdownToHtml(contentHtml);
+                }
+                
                 const normalizedPost = {
                     id: post.id || generateSlug(post.title),
                     title: post.title || 'Untitled',
@@ -235,11 +289,11 @@ async function fetchAllPosts(forceRefresh = false) {
                     image: (post.image && post.image !== '') ? post.image : CONFIG.defaultImage,
                     category: post.category || 'News',
                     tags: Array.isArray(post.tags) ? post.tags : (post.tags ? [post.tags] : ['News']),
-                    summary: post.summary || (post.content ? post.content.replace(/<[^>]*>/g, '').substring(0, 150) : ''),
-                    content: post.content || '<p>No content available.</p>',
+                    summary: post.summary || (contentHtml ? contentHtml.replace(/<[^>]*>/g, '').substring(0, 150) : ''),
+                    content: contentHtml,
                     featured: post.featured === true,
                     author: post.author || 'ByteBulletin Staff',
-                    readingTime: post.readingTime || calculateReadTime(post.content),
+                    readingTime: post.readingTime || calculateReadTime(contentHtml),
                     seoTitle: post.seo?.seoTitle || post.seoTitle || post.title,
                     seoDescription: post.seo?.seoDescription || post.seoDescription || (post.summary || '').substring(0, 160)
                 };
@@ -287,18 +341,19 @@ function searchPosts(query) {
     return state.allPosts.filter(p => 
         p.title.toLowerCase().includes(lowerQuery) ||
         (p.summary && p.summary.toLowerCase().includes(lowerQuery)) ||
-        p.content.toLowerCase().includes(lowerQuery) ||
+        (p.content && p.content.toLowerCase().includes(lowerQuery)) ||
         (p.tags && p.tags.some(tag => tag.toLowerCase().includes(lowerQuery)))
     );
 }
 
 // ------------------------------
-// RENDERING COMPONENTS
+// RENDERING COMPONENTS (UPGRADED)
 // ------------------------------
 function renderNewsCard(post, showBookmarkBtn = true) {
     const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
     const isBookmarked = bookmarks.includes(post.id);
     const featuredBadge = post.featured ? '<span class="featured-badge"><i class="fas fa-star"></i> Featured</span>' : '';
+    const truncatedSummary = truncateSummary(post.summary || post.content.replace(/<[^>]*>/g, ''), 110);
     
     return `
         <div class="news-card" data-id="${post.id}">
@@ -308,13 +363,13 @@ function renderNewsCard(post, showBookmarkBtn = true) {
                 ${featuredBadge}
             </div>
             <div class="card-content">
-                <div class="card-category">${escapeHtml(post.category)}</div>
+                <span class="card-category">${escapeHtml(post.category)}</span>
                 <h3 class="card-title"><a href="/post.html?id=${post.id}">${escapeHtml(post.title)}</a></h3>
                 <div class="card-meta">
-                    <span><i class="far fa-calendar"></i> ${formatDate(post.date)}</span>
+                    <span><i class="far fa-calendar-alt"></i> ${formatDate(post.date)}</span>
                     <span class="read-time"><i class="far fa-clock"></i> ${post.readingTime || calculateReadTime(post.content)}</span>
                 </div>
-                <p class="card-excerpt">${escapeHtml(post.summary || post.content.replace(/<[^>]*>/g, '').substring(0, 150))}</p>
+                <p class="card-excerpt">${escapeHtml(truncatedSummary)}</p>
                 ${showBookmarkBtn ? `<button class="bookmark-btn ${isBookmarked ? 'active' : ''}" data-id="${post.id}"><i class="fas fa-bookmark"></i> ${isBookmarked ? 'Saved' : 'Save'}</button>` : ''}
             </div>
         </div>
@@ -327,17 +382,18 @@ function renderFeaturedHero() {
     
     const mainFeatured = featured[0];
     const sideFeatured = featured.slice(1, 3);
+    const truncatedSummary = truncateSummary(mainFeatured.summary || mainFeatured.content.replace(/<[^>]*>/g, ''), 100);
     
     return `
         <div class="featured-hero">
             <div class="featured-main">
                 <img src="${mainFeatured.image}" alt="${escapeHtml(mainFeatured.title)}" onerror="this.src='${CONFIG.defaultImage}'">
                 <div class="featured-main-content">
-                    <span class="featured-label"><i class="fas fa-fire"></i> Featured Story</span>
+                    <span class="featured-label"><i class="fas fa-fire"></i> TOP STORY</span>
                     <h2><a href="/post.html?id=${mainFeatured.id}">${escapeHtml(mainFeatured.title)}</a></h2>
-                    <p>${escapeHtml(mainFeatured.summary || mainFeatured.content.replace(/<[^>]*>/g, '').substring(0, 120))}</p>
+                    <p>${escapeHtml(truncatedSummary)}</p>
                     <div class="featured-meta">
-                        <span><i class="far fa-calendar"></i> ${formatDate(mainFeatured.date)}</span>
+                        <span><i class="far fa-calendar-alt"></i> ${formatDate(mainFeatured.date)}</span>
                         <span><i class="far fa-clock"></i> ${mainFeatured.readingTime || calculateReadTime(mainFeatured.content)}</span>
                     </div>
                 </div>
@@ -349,7 +405,7 @@ function renderFeaturedHero() {
                         <img src="${post.image}" alt="${escapeHtml(post.title)}" onerror="this.src='${CONFIG.defaultImage}'">
                         <div class="featured-side-content">
                             <h3><a href="/post.html?id=${post.id}">${escapeHtml(post.title)}</a></h3>
-                            <span class="featured-side-meta">${formatDate(post.date)}</span>
+                            <div class="featured-side-meta">${formatDate(post.date)} • ${post.readingTime || calculateReadTime(post.content)}</div>
                         </div>
                     </div>
                 `).join('')}
@@ -392,7 +448,7 @@ function renderRelatedPosts(currentPostId, category, limit = 4) {
     
     return `
         <div class="related-posts">
-            <h3><i class="fas fa-link"></i> Related Articles</h3>
+            <h3><i class="fas fa-link"></i> More from ${escapeHtml(category)}</h3>
             <div class="related-posts-grid">
                 ${related.map(post => `
                     <div class="related-post-card">
@@ -428,7 +484,7 @@ async function loadHome() {
         <div class="two-column">
             <div class="main-col">
                 <h2 style="font-size:28px;margin-bottom:28px;border-left:5px solid #e63946;padding-left:18px">
-                    <i class="fas fa-fire"></i> Latest Headlines
+                    <i class="fas fa-newspaper"></i> Latest Headlines
                 </h2>
                 <div class="news-grid">${latestPosts.map(p => renderNewsCard(p)).join('')}</div>
             </div>
@@ -482,7 +538,7 @@ async function loadCategory() {
     const html = `
         <div style="margin:48px 0;">
             <h2 style="margin-bottom:28px;border-left:5px solid #e63946;padding-left:18px;">
-                <i class="fas fa-folder"></i> ${escapeHtml(category)} 
+                <i class="fas fa-folder-open"></i> ${escapeHtml(category)} 
                 <span style="font-size:14px;color:#999;font-weight:normal;">(${filtered.length} articles)</span>
             </h2>
             <div class="news-grid">${filtered.map(p => renderNewsCard(p)).join('')}</div>
@@ -519,7 +575,7 @@ async function loadPost() {
     
     // DYNAMIC SEO
     const seoTitle = post.seoTitle || post.title;
-    const seoDescription = post.seoDescription || post.summary || post.content.replace(/<[^>]*>/g, '').substring(0, 160);
+    const seoDescription = post.seoDescription || post.summary || (post.content ? post.content.replace(/<[^>]*>/g, '').substring(0, 160) : '');
     
     document.title = `${seoTitle} - ByteBulletin`;
     
@@ -555,17 +611,20 @@ async function loadPost() {
         </nav>
     `;
     
+    // Ensure content is properly formatted HTML
+    let contentHtml = post.content || '<p>No content available.</p>';
+    
     const html = `${breadcrumb}
     <div class="article-full">
         <h1 class="post-title">${escapeHtml(post.title)}</h1>
         <div class="post-meta">
             <span><i class="far fa-calendar-alt"></i> ${formatDate(post.date)}</span>
             <span><i class="far fa-user"></i> ${escapeHtml(post.author)}</span>
-            <span class="read-time"><i class="far fa-clock"></i> ${post.readingTime || calculateReadTime(post.content)}</span>
+            <span class="read-time"><i class="far fa-clock"></i> ${post.readingTime || calculateReadTime(contentHtml)}</span>
         </div>
         ${renderModernShareButtons()}
         <img src="${post.image}" class="post-featured-img" alt="${escapeHtml(post.title)}" onerror="this.src='${CONFIG.defaultImage}'">
-        <div class="post-content">${post.content}</div>
+        <div class="post-content">${contentHtml}</div>
         <div class="post-labels">
             <span class="label-badge"><i class="fas fa-folder"></i> ${escapeHtml(post.category)}</span>
             ${post.tags ? post.tags.map(tag => `<span class="label-badge"><i class="fas fa-tag"></i> ${escapeHtml(tag)}</span>`).join('') : ''}
@@ -702,7 +761,7 @@ async function updateBreakingTicker(posts) {
     if (dom.breakingTicker && posts && posts.length) {
         const featuredTitles = posts.filter(p => p.featured).slice(0, 3).map(p => p.title);
         const titles = featuredTitles.length ? featuredTitles : posts.slice(0, 5).map(p => p.title);
-        dom.breakingTicker.innerHTML = `<div class="ticker-item">🔥 ${titles.join('  •  ')}</div>`;
+        dom.breakingTicker.innerHTML = `<div class="ticker-item">🔥 BREAKING: ${titles.join('  •  ')}</div>`;
     }
 }
 
@@ -835,7 +894,7 @@ function initReadingProgress() {
 }
 
 // ------------------------------
-// MOBILE SIDEBAR (NO ADMIN LINKS)
+// MOBILE SIDEBAR
 // ------------------------------
 function createMobileSidebar() {
     if (document.getElementById('mobileSidebar')) return;
